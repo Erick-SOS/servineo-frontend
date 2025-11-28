@@ -12,7 +12,7 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
 export const baseQuery = fetchBaseQuery({
   baseUrl: API_URL,
   prepareHeaders: (headers) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('servineo_token');
     if (token) {
       headers.set('authorization', `Bearer ${token}`);
     }
@@ -38,6 +38,6 @@ export const isApiError = (error: unknown): error is ApiError => {
 export const baseApi = createApi({
   reducerPath: 'api',
   baseQuery,
-  tagTypes: ['User', 'Job', 'Statistics', 'JobOffer', 'Requester', 'SearchHistory'],
+  tagTypes: ['User', 'Job', 'Statistics', 'JobOffer', 'Requester', 'SearchHistory', 'Experience'],
   endpoints: () => ({}),
 });
