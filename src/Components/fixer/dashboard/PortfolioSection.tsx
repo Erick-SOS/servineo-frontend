@@ -260,7 +260,7 @@ export function PortfolioSection({ readOnly = false, fixerId }: PortfolioSection
                 className="group relative aspect-square rounded-2xl overflow-hidden bg-gray-100 border border-gray-200 shadow-sm hover:shadow-lg transition-all cursor-pointer"
                 onClick={() => !isVideo && hasUrl && setFullscreenImage(item.url || null)}
                 style={isVideo ? { cursor: 'default' } : undefined}
-              >
+              > 
                 {isVideo && videoId ? (
                   <iframe
                     className="absolute inset-0 w-full h-full rounded-2xl"
