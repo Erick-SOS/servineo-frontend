@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
@@ -21,6 +22,10 @@ import {
 import { ArrowLeft, Briefcase, Map, List, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import type { JobOfferData, AdaptedJobOffer } from '@/types/jobOffers';
+import { adaptOfferToModalFormat } from '@/types/jobOffers';
+
+const SCROLL_POSITION_KEY = 'jobOffers_scrollPosition';
 
 // ============================================================================
 // CONSTANTS
@@ -137,8 +142,24 @@ export default function JobOffersPage() {
 
   // Reset to first page when filters change
   useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, selectedCities, selectedJobTypes]);
+    if (!isLoading && Array.isArray(offers) && offers.length > 0 && !scrollRestoredRef.current) {
+      try {
+        const savedPosition = sessionStorage.getItem(SCROLL_POSITION_KEY);
+        if (savedPosition) {
+          const position = parseInt(savedPosition, 10);
+          if (!isNaN(position)) {
+            setTimeout(() => {
+              window.scrollTo(0, position);
+              scrollRestoredRef.current = true;
+              sessionStorage.removeItem(SCROLL_POSITION_KEY);
+            }, 100);
+          }
+        }
+      } catch {
+        // ignorar errores
+      }
+    }
+  }, [isLoading, offers]);
 
   // ============================================================================
   // EVENT HANDLERS
@@ -407,12 +428,11 @@ export default function JobOffersPage() {
             </div>
           </div>
 
-          {/* Search Bar */}
-          <div className="mt-4">
-            <SearchHeader />
-          </div>
-        </div>
-      </header>
+    setTimeout(() => {
+      dispatch(enablePersistence());
+      dispatch(setPaginaActual(pageToRestore));
+    }, 0);
+  };
 
       {/* Main Layout */}
       <div className="flex flex-col md:flex-row">
