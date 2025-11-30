@@ -24,6 +24,7 @@
     "class-variance-authority": "^0.7.1",
     "cn": "^0.1.1",
     "date-fns": "^4.1.0",
+    "googleapis": "^166.0.0",
     "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.546.0",

@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form"
 import { X } from "lucide-react"
 import { jobOfferSchema, type JobOfferFormData } from "@/app/lib/validations/Job-offer-Schemas"
 import { availableServices, type JobOffer } from "@/app/lib/mock-data"
+import ImageUpload from "./ImageUpload"
 
 interface JobOfferFormProps {
   onSubmit: (data: JobOfferFormData) => void
@@ -38,6 +39,7 @@ export default function JobOfferForm({
     handleSubmit,
     formState: { errors },
     setValue,
+    watch,
   } = useForm<JobOfferFormData>({
     resolver: zodResolver(jobOfferSchema),
     defaultValues: {
@@ -48,6 +50,8 @@ export default function JobOfferForm({
       services: normalizeServices(defaultValues?.services),
     },
   })
+
+  const photos = watch("photos")
 
   const toggleService = (service: string) => {
     const serviceObj = { id: service, value: service }
@@ -147,6 +151,19 @@ export default function JobOfferForm({
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           {errors.price && <p className="text-sm text-red-600">{errors.price.message}</p>}
+        </div>
+
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700">
+            Fotos del servicio
+            <span className="text-xs text-gray-500 ml-2">(máx. 5 imágenes)</span>
+          </label>
+          <ImageUpload
+            value={photos || []}
+            onChange={(urls) => setValue("photos", urls)}
+            maxFiles={5}
+          />
+          {errors.photos && <p className="text-sm text-red-600">{errors.photos.message}</p>}
         </div>
 
         <div className="flex gap-3 pt-4">

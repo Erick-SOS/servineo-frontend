@@ -8,6 +8,7 @@ import { IJobOffer } from "@/types/fixer-profile"
 import { Modal } from "@/Components/Modal"
 import { useForm } from "react-hook-form"
 import { JobOfferCard } from "@/Components/Job-offers/JobOfferCard"
+import ImageUpload from "@/Components/Job-offers/ImageUpload"
 import type { JobOfferData } from "@/types/jobOffers"
 import { useAppSelector } from "@/app/redux/hooks"
 import {
@@ -53,6 +54,7 @@ export function JobOffersSection({ readOnly = false }: JobOffersSectionProps) {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
     const [offerToDelete, setOfferToDelete] = useState<string | null>(null)
     const [editingOffer, setEditingOffer] = useState<IJobOffer | null>(null)
+    const [uploadedImages, setUploadedImages] = useState<string[]>([])
 
     const { register, handleSubmit, reset, setValue } = useForm<IJobOffer>()
 
@@ -79,8 +81,10 @@ export function JobOffersSection({ readOnly = false }: JobOffersSectionProps) {
             setValue("price", offer.price)
             setValue("categories", offer.categories)
             setValue("city", offer.city)
+            setUploadedImages(offer.images || [])
         } else {
             setEditingOffer(null)
+            setUploadedImages([])
             reset({
                 description: "",
                 price: 0,
@@ -95,6 +99,7 @@ export function JobOffersSection({ readOnly = false }: JobOffersSectionProps) {
     const handleCloseModal = () => {
         setIsModalOpen(false)
         setEditingOffer(null)
+        setUploadedImages([])
         reset()
     }
 
@@ -133,7 +138,7 @@ export function JobOffersSection({ readOnly = false }: JobOffersSectionProps) {
                 city: data.city,
                 price: price,
                 services: data.categories,
-                photos: data.images || [],
+                photos: uploadedImages,
                 title: data.categories[0] || "Servicio",
                 location: user.ubicacion ? {
                     lat: user.ubicacion.lat || 0,
@@ -309,6 +314,18 @@ export function JobOffersSection({ readOnly = false }: JobOffersSectionProps) {
                                 className="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                             />
                         </div>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Fotos del servicio
+                            <span className="text-xs text-gray-500 ml-2">(máx. 5 imágenes)</span>
+                        </label>
+                        <ImageUpload
+                            value={uploadedImages}
+                            onChange={setUploadedImages}
+                            maxFiles={5}
+                        />
                     </div>
 
                     <div className="flex justify-end gap-2 pt-4">
